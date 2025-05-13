@@ -88,7 +88,7 @@ const coffees: Coffee[] = [
     price: 4.29,
     image: "/images/himg5.jpg",
     width:400,
-    height1:400,
+    height:400,
     category: "hot",
     featured: false,
   },

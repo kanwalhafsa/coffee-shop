@@ -4,8 +4,8 @@ export interface Coffee {
     description: string
     price: number
     image: string
-    width?: number
-    height?: number
+    width: number
+    height: number
     category: string
     featured?: boolean
   }
