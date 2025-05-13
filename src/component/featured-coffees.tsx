@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/hooks/use-cart"
 import { formatPrice } from "@/lib/utils"
-import type { Coffee } from "../../../lib/types"
+import type { Coffee } from "@/lib/types"
 
 // Featured coffee data
 const featuredCoffees: Coffee[] = [
@@ -19,7 +19,9 @@ const featuredCoffees: Coffee[] = [
     name: "Espresso Classico",
     description: "Our signature espresso with rich, bold flavor and perfect crema.",
     price: 3.99,
-    image: "/placeholder.svg?height=400&width=400",
+    image: "/images/himg1.jpg",
+    width:400,
+    height:400,
     category: "hot",
     featured: true,
   },
@@ -28,7 +30,9 @@ const featuredCoffees: Coffee[] = [
     name: "Caramel Macchiato",
     description: "Espresso with steamed milk, vanilla, and caramel drizzle.",
     price: 4.99,
-    image: "/placeholder.svg?height=400&width=400",
+    image: "/images/himg2.jpg",
+    width:400,
+    height:400,
     category: "hot",
     featured: true,
   },
@@ -37,7 +41,9 @@ const featuredCoffees: Coffee[] = [
     name: "Iced Mocha",
     description: "Espresso with chocolate, milk, and ice, topped with whipped cream.",
     price: 5.49,
-    image: "/placeholder.svg?height=400&width=400",
+    image: "/images/img2.jpg",
+    width:400,
+    height:400,
     category: "cold",
     featured: true,
   },
@@ -46,7 +52,9 @@ const featuredCoffees: Coffee[] = [
     name: "Hazelnut Latte",
     description: "Espresso with steamed milk and hazelnut syrup.",
     price: 4.79,
-    image: "/placeholder.svg?height=400&width=400",
+    image: "/images/img4.jpg",
+    width:400,
+    height:400,
     category: "hot",
     featured: true,
   },

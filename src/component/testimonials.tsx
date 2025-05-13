@@ -7,7 +7,9 @@ const testimonials = [
   {
     id: 1,
     name: "Sarah Johnson",
-    avatar: "/placeholder.svg?height=100&width=100",
+    avatar: "/images/fimg1.jpg",
+    width:100,
+    height:100,
     rating: 5,
     comment:
       "The best coffee I've ever had! The atmosphere is cozy and the staff is incredibly friendly. I come here every morning before work.",
@@ -16,7 +18,9 @@ const testimonials = [
   {
     id: 2,
     name: "Michael Chen",
-    avatar: "/placeholder.svg?height=100&width=100",
+    avatar: "/images/fimg1.jpg",
+    width:100,
+    height:100,
     rating: 4,
     comment:
       "Great selection of specialty coffees. The Hazelnut Latte is my favorite. Prices are reasonable for the quality you get.",
@@ -25,7 +29,9 @@ const testimonials = [
   {
     id: 3,
     name: "Emily Rodriguez",
-    avatar: "/placeholder.svg?height=100&width=100",
+    avatar: "/images/fimg1.jpg",
+    width:100,
+    height:100,
     rating: 5,
     comment:
       "I love working from this coffee shop. The WiFi is reliable, and they don't mind if you stay for hours. Plus, their pastries are amazing!",
