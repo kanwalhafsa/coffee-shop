@@ -132,7 +132,7 @@ export default function AboutPage() {
                 alt="Team member" 
                 width={300}
                 height={300}
-                className="object-cover" 
+                className="object-coverobject-top w-full h-full" 
               />
             </div>
             <div className="relative h-40 rounded-lg overflow-hidden">
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 alt="Team member" 
                 width={300}
                 height={300} 
-                className="object-cover" 
+                className="object-coverobject-top w-full h-full" 
               />
             </div>
             <div className="relative h-40 rounded-lg overflow-hidden">
@@ -159,7 +159,7 @@ export default function AboutPage() {
                 alt="Team member" 
                 width={300}
                 height={300}
-                className="object-cover" 
+                className="object-cover object-top w-full h-full" 
               />
             </div>
           </div>
