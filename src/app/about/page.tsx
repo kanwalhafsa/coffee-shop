@@ -39,9 +39,10 @@ export default function AboutPage() {
         </div>
         <div className="relative h-[400px] rounded-lg overflow-hidden">
           <Image 
-            src="/placeholder.svg?height=800&width=600" 
+            src="/images/story.jpg" 
             alt="Our coffee shop story" 
-            fill 
+            width={600}
+            height={800}
             className="object-cover" 
           />
         </div>
@@ -127,33 +128,37 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="relative h-40 rounded-lg overflow-hidden">
               <Image 
-                src="/placeholder.svg?height=300&width=300" 
+                src="/images/timg1.jpg" 
                 alt="Team member" 
-                fill 
+                width={300}
+                height={300}
                 className="object-cover" 
               />
             </div>
             <div className="relative h-40 rounded-lg overflow-hidden">
               <Image 
-                src="/placeholder.svg?height=300&width=300" 
-                alt="Team member" 
-                fill 
+                 src="/images/timg2.jpg" 
+                 alt="Team member" 
+                 width={300}
+                 height={300}
                 className="object-cover" 
               />
             </div>
             <div className="relative h-40 rounded-lg overflow-hidden">
               <Image 
-                src="/placeholder.svg?height=300&width=300" 
+                src="/images/timg3.jpg" 
                 alt="Team member" 
-                fill 
+                width={300}
+                height={300} 
                 className="object-cover" 
               />
             </div>
             <div className="relative h-40 rounded-lg overflow-hidden">
               <Image 
-                src="/placeholder.svg?height=300&width=300" 
+                src="/images/timg4.jpg" 
                 alt="Team member" 
-                fill 
+                width={300}
+                height={300}
                 className="object-cover" 
               />
             </div>
