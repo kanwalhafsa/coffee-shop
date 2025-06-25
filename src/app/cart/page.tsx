@@ -12,6 +12,8 @@ import { useCart } from "@/hooks/use-cart"
 import { formatPrice } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
+export const dynamic = 'force-dynamic';
+
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart } = useCart()
   const [mounted, setMounted] = useState(false)

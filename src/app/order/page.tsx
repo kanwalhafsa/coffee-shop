@@ -4,7 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Clock } from "lucide-react"
-
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -16,7 +16,9 @@ import { useAuth } from "../../../contexts/auth-context"
 import { formatPrice } from "@/lib/utils"
 import { toast } from "sonner"
 
-export default function OrderPage() {
+export const dynamic = 'force-dynamic';
+
+ function OrderContent() {
   const router = useRouter()
   const { user } = useAuth()
   const { items, clearCart } = useCart()
@@ -270,4 +272,12 @@ export default function OrderPage() {
       </div>
     </div>
   )
+}
+
+export default function OrderPage() {
+  return (
+    <Suspense fallback={<div>Loading order...</div>}>
+      <OrderContent />
+    </Suspense>
+  );
 }
