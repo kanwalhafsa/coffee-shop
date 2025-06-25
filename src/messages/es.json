@@ -1,0 +1,59 @@
+
+{
+  "common": {
+    "home": "Inicio",
+    "menu": "Menú",
+    "contact": "Contacto",
+    "feedback": "Opiniones",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "myAccount": "Mi Cuenta",
+    "logout": "Cerrar Sesión",
+    "cart": "Carrito",
+    "orderNow": "Ordenar Ahora",
+    "search": "Buscar"
+  },
+  "home": {
+    "hero": {
+      "title": "Experimenta el Café Perfecto",
+      "subtitle": "Descubre nuestra selección de café artesanal elaborado con granos premium de todo el mundo.",
+      "viewMenu": "Ver Nuestro Menú",
+      "contactUs": "Contáctanos"
+    },
+    "about": {
+      "title": "Nuestra Historia",
+      "description1": "Fundada en 2010, nuestra cafetería ha estado sirviendo a la comunidad con los mejores granos de café provenientes de granjas éticas de todo el mundo. Nos enorgullecemos de nuestras técnicas de preparación y del ambiente cálido que hemos creado para nuestros clientes.",
+      "description2": "Cada taza es elaborada con cuidado por nuestros baristas expertos que se apasionan por ofrecer la experiencia perfecta de café.",
+      "learnMore": "Conoce Más Sobre Nosotros"
+    },
+    "featured": {
+      "title": "Nuestros Cafés Destacados",
+      "subtitle": "Explora nuestra selección de cafés premium, cada uno con su perfil de sabor y carácter único.",
+      "viewAll": "Ver Menú Completo"
+    },
+    "testimonials": {
+      "title": "Lo Que Dicen Nuestros Clientes",
+      "subtitle": "No solo tomes nuestra palabra. Esto es lo que nuestros clientes dicen sobre su experiencia.",
+      "leaveFeedback": "Deja Tu Opinión"
+    },
+    "cta": {
+      "title": "¿Listo para Experimentar Nuestro Café?",
+      "subtitle": "Visita nuestra tienda o ordena en línea para probar nuestra selección de café premium.",
+      "orderOnline": "Ordenar En Línea",
+      "findLocation": "Encuentra Nuestra Ubicación"
+    }
+  },
+  "menu": {
+    "title": "Nuestro Menú de Café",
+    "subtitle": "Explora nuestra selección artesanal de cafés y bebidas premium, elaborados con los mejores ingredientes.",
+    "categories": {
+      "all": "Todos",
+      "hot": "Café Caliente",
+      "cold": "Café Frío",
+      "specialty": "Especialidad"
+    },
+    "search": "Buscar cafés...",
+    "addToCart": "Añadir al Carrito",
+    "noResults": "No se encontraron cafés que coincidan con tus criterios."
+  }
+}

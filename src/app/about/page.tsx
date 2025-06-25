@@ -109,62 +109,60 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-muted/30 rounded-lg p-8 mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Our Team</h2>
-            <p className="text-muted-foreground mb-6">
-              Behind every great cup of coffee is our dedicated team of coffee enthusiasts. Our baristas are 
-              not just employees – they're coffee artists who take pride in their craft.
-            </p>
-            <p className="text-muted-foreground mb-6">
-              Each team member undergoes extensive training to ensure they can create the perfect brew and 
-              provide exceptional service to our customers.
-            </p>
-            <Button asChild>
-              <Link href="/contact">Meet Our Team</Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-40 rounded-lg overflow-hidden">
-              <Image 
-                src="/images/timg1.jpg" 
-                alt="Team member" 
-                width={300}
-                height={300}
-                className="object-coverobject-top w-full h-full" 
-              />
-            </div>
-            <div className="relative h-40 rounded-lg overflow-hidden">
-              <Image 
-                 src="/images/timg2.jpg" 
-                 alt="Team member" 
-                 width={300}
-                 height={300}
-                className="object-cover" 
-              />
-            </div>
-            <div className="relative h-40 rounded-lg overflow-hidden">
-              <Image 
-                src="/images/timg3.jpg" 
-                alt="Team member" 
-                width={300}
-                height={300} 
-                className="object-coverobject-top w-full h-full" 
-              />
-            </div>
-            <div className="relative h-40 rounded-lg overflow-hidden">
-              <Image 
-                src="/images/timg4.jpg" 
-                alt="Team member" 
-                width={300}
-                height={300}
-                className="object-cover object-top w-full h-full" 
-              />
-            </div>
-          </div>
-        </div>
+      <div className="bg-muted/30 rounded-lg p-6 md:p-8 mb-16">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+    <div>
+      <h2 className="text-2xl md:text-3xl font-bold mb-4">Our Passionate Team</h2>
+      <p className="text-muted-foreground mb-4 text-sm md:text-base">
+        Behind every delicious cup of coffee is our team of passionate baristas and coffee enthusiasts. Each member brings unique expertise, crafting every brew with precision and love. From sourcing the finest beans to perfecting latte art, our team is dedicated to making your coffee experience unforgettable.
+      </p>
+      <p className="text-muted-foreground mb-6 text-sm md:text-base">
+        Our baristas undergo rigorous training to master the art of coffee-making. They’re not just serving drinks—they’re creating moments of joy for every customer. Whether it’s a quick espresso or a custom pour-over, our team ensures every sip reflects our commitment to quality and care.
+      </p>
+      <Button asChild>
+        <Link href="/contact">Meet Our Team</Link>
+      </Button>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div className="relative rounded-lg overflow-hidden aspect-square">
+        <Image 
+          src="/images/timg1.jpg" 
+          alt="Team member 1" 
+          width={200}
+          height={200}
+          className="object-cover w-full h-full" 
+        />
       </div>
+      <div className="relative rounded-lg overflow-hidden aspect-square">
+        <Image 
+          src="/images/timg2.jpg" 
+          alt="Team member 2" 
+          width={200}
+          height={200}
+          className="object-cover w-full h-full" 
+        />
+      </div>
+      <div className="relative rounded-lg overflow-hidden aspect-square">
+        <Image 
+          src="/images/timg3.jpg" 
+          alt="Team member 3" 
+          width={200}
+          height={200}
+          className="object-cover w-full h-full" 
+        />
+      </div>
+      <div className="relative rounded-lg overflow-hidden aspect-square">
+        <Image 
+          src="/images/timg4.jpg" 
+          alt="Team member 4" 
+          width={200}
+          height={200}
+          className="object-cover w-full h-full" 
+        />
+      </div>
+    </div>
+  </div>
+</div>
 
       <div className="text-center">
         <h2 className="text-3xl font-bold mb-6">Visit Us Today</h2>

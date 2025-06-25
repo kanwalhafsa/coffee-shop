@@ -10,42 +10,41 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full h-[80vh] flex items-center">
-       
-        <div className="absolute inset-0 z-0">
-  <Image
-    src="/images/bgimg.jpg"
-    alt="Coffee shop hero image"
-    width={1920}
-    height={1080}
-    className="object-cover w-full h-full brightness-50"
-    priority
-  />
-</div>
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl text-white">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Experience the Perfect Brew</h1>
-            <p className="text-lg md:text-xl mb-8">
-              Discover our handcrafted coffee selection made with premium beans from around the world.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" asChild>
-                <Link href="/menu">
-                  View Our Menu <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="bg-transparent text-white border-white hover:bg-white/10"
-                asChild
-              >
-                <Link href="/contact">Contact Us</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="relative w-full min-h-screen flex items-center">
+  <div className="absolute inset-0 z-0 w-full">
+    <Image
+      src="/images/bgimg.jpg"
+      alt="Coffee shop hero image"
+      width={1920}
+      height={1100}
+      className="object-cover w-full h-full brightness-75 object-position-center"
+      priority
+    />
+  </div>
+  <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-2xl text-white">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Experience the Perfect Brew</h1>
+      <p className="text-lg md:text-xl mb-8">
+        Discover our handcrafted coffee selection made with premium beans from around the world.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button size="lg" asChild>
+          <Link href="/menu">
+            View Our Menu <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          className="bg-transparent text-white border-white hover:bg-white/10"
+          asChild
+        >
+          <Link href="/contact">Contact Us</Link>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* About Section */}
       <section className="py-16 bg-muted/30">

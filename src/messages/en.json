@@ -1,0 +1,59 @@
+
+{
+  "common": {
+    "home": "Home",
+    "menu": "Menu",
+    "contact": "Contact",
+    "feedback": "Feedback",
+    "login": "Login",
+    "register": "Register",
+    "myAccount": "My Account",
+    "logout": "Logout",
+    "cart": "Cart",
+    "orderNow": "Order Now",
+    "search": "Search"
+  },
+  "home": {
+    "hero": {
+      "title": "Experience the Perfect Brew",
+      "subtitle": "Discover our handcrafted coffee selection made with premium beans from around the world.",
+      "viewMenu": "View Our Menu",
+      "contactUs": "Contact Us"
+    },
+    "about": {
+      "title": "Our Story",
+      "description1": "Founded in 2010, our coffee shop has been serving the community with the finest coffee beans sourced from ethical farms around the world. We take pride in our brewing techniques and the warm atmosphere we've created for our customers.",
+      "description2": "Every cup is crafted with care by our expert baristas who are passionate about delivering the perfect coffee experience.",
+      "learnMore": "Learn More About Us"
+    },
+    "featured": {
+      "title": "Our Featured Coffees",
+      "subtitle": "Explore our selection of premium coffees, each with its unique flavor profile and character.",
+      "viewAll": "View Full Menu"
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "subtitle": "Don't just take our word for it. Here's what our customers have to say about their experience.",
+      "leaveFeedback": "Leave Your Feedback"
+    },
+    "cta": {
+      "title": "Ready to Experience Our Coffee?",
+      "subtitle": "Visit our shop or order online for a taste of our premium coffee selection.",
+      "orderOnline": "Order Online",
+      "findLocation": "Find Our Location"
+    }
+  },
+  "menu": {
+    "title": "Our Coffee Menu",
+    "subtitle": "Explore our handcrafted selection of premium coffees and beverages, made with the finest ingredients.",
+    "categories": {
+      "all": "All",
+      "hot": "Hot Coffee",
+      "cold": "Cold Coffee",
+      "specialty": "Specialty"
+    },
+    "search": "Search coffees...",
+    "addToCart": "Add to Cart",
+    "noResults": "No coffees found matching your criteria."
+  }
+}
