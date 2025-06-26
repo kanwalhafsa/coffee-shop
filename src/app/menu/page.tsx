@@ -1,12 +1,10 @@
+"use client"
+
+import { Suspense } from "react"
 import CoffeeList from "../../component/coffee-list"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export const metadata = {
-  title: "Coffee Menu | Brew Haven",
-  description: "Explore our selection of premium coffees and beverages",
-}
-
-export default function MenuPage() {
+function MenuPageContent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
@@ -24,18 +22,34 @@ export default function MenuPage() {
           <TabsTrigger value="specialty">Specialty</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <CoffeeList category="all" />
+          <Suspense fallback={<div>Loading coffee list...</div>}>
+            <CoffeeList category="all" />
+          </Suspense>
         </TabsContent>
         <TabsContent value="hot">
-          <CoffeeList category="hot" />
+          <Suspense fallback={<div>Loading coffee list...</div>}>
+            <CoffeeList category="hot" />
+          </Suspense>
         </TabsContent>
         <TabsContent value="cold">
-          <CoffeeList category="cold" />
+          <Suspense fallback={<div>Loading coffee list...</div>}>
+            <CoffeeList category="cold" />
+          </Suspense>
         </TabsContent>
         <TabsContent value="specialty">
-          <CoffeeList category="specialty" />
+          <Suspense fallback={<div>Loading coffee list...</div>}>
+            <CoffeeList category="specialty" />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>
+  )
+}
+
+export default function MenuPage() {
+  return (
+    <Suspense fallback={<div>Loading menu...</div>}>
+      <MenuPageContent />
+    </Suspense>
   )
 }

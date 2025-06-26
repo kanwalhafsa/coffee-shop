@@ -1,11 +1,14 @@
-"use client"
+"use client";
 
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import ContactFormAPI from "@/component/contact-form-api"
-import GoogleMap from "@/component/google-map"
+import { Suspense } from "react";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ContactFormAPI from "@/component/contact-form-api";
+import GoogleMap from "@/component/google-map";
 
-export default function ContactPage() {
+export const dynamic = 'force-dynamic';
+
+function ContactContent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
@@ -23,7 +26,9 @@ export default function ContactPage() {
               <CardTitle>Send us a Message</CardTitle>
             </CardHeader>
             <CardContent>
-              <ContactFormAPI />
+              <Suspense fallback={<div>Loading contact form...</div>}>
+                <ContactFormAPI />
+              </Suspense>
             </CardContent>
           </Card>
         </div>
@@ -83,9 +88,19 @@ export default function ContactPage() {
           </Card>
 
           {/* Map */}
-          <GoogleMap address="123 Coffee Street, Brew City, BC 12345" />
+          <Suspense fallback={<div>Loading map...</div>}>
+            <GoogleMap address="123 Coffee Street, Brew City, BC 12345" />
+          </Suspense>
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div>Loading contact page...</div>}>
+      <ContactContent />
+    </Suspense>
+  );
 }

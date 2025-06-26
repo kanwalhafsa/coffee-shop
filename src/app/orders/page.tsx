@@ -1,29 +1,30 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Package, Clock, CheckCircle, Truck, ArrowLeft } from "lucide-react"
+import { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Package, Clock, CheckCircle, Truck, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from "../../../contexts/auth-context";
+import { formatPrice } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { useAuth } from "../../../contexts/auth-context"
-import { formatPrice } from "@/lib/utils"
+export const dynamic = 'force-dynamic';
 
 interface Order {
-  id: string
-  userId: string
-  items: any[]
-  customerInfo: any
-  paymentMethod: string
-  subtotal: number
-  tax: number
-  deliveryFee: number
-  total: number
-  status: string
-  createdAt: string
+  id: string;
+  userId: string;
+  items: any[];
+  customerInfo: any;
+  paymentMethod: string;
+  subtotal: number;
+  tax: number;
+  deliveryFee: number;
+  total: number;
+  status: string;
+  createdAt: string;
 }
 
 const statusConfig = {
@@ -31,30 +32,30 @@ const statusConfig = {
   preparing: { label: "Preparing", icon: Clock, color: "bg-yellow-500" },
   delivering: { label: "Out for Delivery", icon: Truck, color: "bg-blue-500" },
   delivered: { label: "Delivered", icon: Package, color: "bg-gray-500" },
-}
+};
 
-export default function OrdersPage() {
-  const { user } = useAuth()
-  const [orders, setOrders] = useState<Order[]>([])
-  const [mounted, setMounted] = useState(false)
+function OrdersContent() {
+  const { user } = useAuth();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
     if (user) {
-      const allOrders = JSON.parse(localStorage.getItem("orders") || "[]")
-      const userOrders = allOrders.filter((order: Order) => order.userId === user.id)
+      const allOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+      const userOrders = allOrders.filter((order: Order) => order.userId === user.id);
       setOrders(
         userOrders.sort((a: Order, b: Order) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-      )
+      );
     }
-  }, [user])
+  }, [user]);
 
   if (!mounted) {
     return (
       <div className="container mx-auto px-4 py-12 min-h-[60vh] flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
   if (orders.length === 0) {
@@ -67,7 +68,7 @@ export default function OrdersPage() {
           <Link href="/menu">Start Shopping</Link>
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -83,8 +84,8 @@ export default function OrdersPage() {
 
       <div className="space-y-6">
         {orders.map((order) => {
-          const status = statusConfig[order.status as keyof typeof statusConfig]
-          const StatusIcon = status.icon
+          const status = statusConfig[order.status as keyof typeof statusConfig];
+          const StatusIcon = status.icon;
 
           return (
             <Card key={order.id}>
@@ -149,9 +150,17 @@ export default function OrdersPage() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<div>Loading orders...</div>}>
+      <OrdersContent />
+    </Suspense>
+  );
 }

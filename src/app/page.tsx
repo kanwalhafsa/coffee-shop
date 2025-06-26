@@ -1,63 +1,65 @@
+"use client"
+
+import { Suspense } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import FeaturedCoffees from "@/component/featured-coffees"
 import Testimonials from "@/component/testimonials"
 
-export default function Home() {
+function PageContent() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative w-full min-h-screen flex items-center">
-  <div className="absolute inset-0 z-0 w-full">
-    <Image
-      src="/images/bgimg.jpg"
-      alt="Coffee shop hero image"
-      width={1920}
-      height={1100}
-      className="object-cover w-full h-full brightness-75 object-position-center"
-      priority
-    />
-  </div>
-  <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="max-w-2xl text-white">
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Experience the Perfect Brew</h1>
-      <p className="text-lg md:text-xl mb-8">
-        Discover our handcrafted coffee selection made with premium beans from around the world.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Button size="lg" asChild>
-          <Link href="/menu">
-            View Our Menu <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="bg-transparent text-white border-white hover:bg-white/10"
-          asChild
-        >
-          <Link href="/contact">Contact Us</Link>
-        </Button>
-      </div>
-    </div>
-  </div>
-</section>
+        <div className="absolute inset-0 z-0 w-full">
+          <Image
+            src="/images/bgimg.jpg"
+            alt="Coffee shop hero image"
+            width={1920}
+            height={1100}
+            className="object-cover w-full h-full brightness-75 object-position-center"
+            priority
+          />
+        </div>
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Experience the Perfect Brew</h1>
+            <p className="text-lg md:text-xl mb-8">
+              Discover our handcrafted coffee selection made with premium beans from around the world.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" asChild>
+                <Link href="/menu">
+                  View Our Menu <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="bg-transparent text-white border-white hover:bg-white/10"
+                asChild
+              >
+                <Link href="/contact">Contact Us</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* About Section */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px] rounded-lg overflow-hidden">
-              <Image 
-              src="/images/ourstory.jpg" 
-              alt="Our coffee shop" 
-              width={600}
-              height={800}
-              className="object-cover" />
-              
+              <Image
+                src="/images/ourstory.jpg"
+                alt="Our coffee shop"
+                width={600}
+                height={800}
+                className="object-cover"
+              />
             </div>
             <div>
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
@@ -87,7 +89,9 @@ export default function Home() {
               Explore our selection of premium coffees, each with its unique flavor profile and character.
             </p>
           </div>
-          <FeaturedCoffees />
+          <Suspense fallback={<div>Loading featured coffees...</div>}>
+            <FeaturedCoffees />
+          </Suspense>
           <div className="text-center mt-10">
             <Button asChild>
               <Link href="/menu">
@@ -107,7 +111,9 @@ export default function Home() {
               Don't just take our word for it. Here's what our customers have to say about their experience.
             </p>
           </div>
-          <Testimonials />
+          <Suspense fallback={<div>Loading testimonials...</div>}>
+            <Testimonials />
+          </Suspense>
           <div className="text-center mt-10">
             <Button variant="outline" asChild>
               <Link href="/feedback">Leave Your Feedback</Link>
@@ -139,5 +145,13 @@ export default function Home() {
         </div>
       </section>
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageContent />
+    </Suspense>
   )
 }

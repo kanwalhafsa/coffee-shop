@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Gift, Coffee, Clock, ChevronRight } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Gift, Coffee, Clock, ChevronRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -16,77 +17,77 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
-// Type definitions
+export const dynamic = 'force-dynamic';
+
+// Type definitions (copy from your original code)
 interface LoyaltyReward {
-  id: string
-  name: string
-  description: string
-  points_required: number
-  active: boolean
+  id: string;
+  name: string;
+  description: string;
+  points_required: number;
+  active: boolean;
 }
 
 interface RedemptionHistory {
-  id: string
-  points_used: number
-  redeemed_at: string
+  id: string;
+  points_used: number;
+  redeemed_at: string;
   loyalty_rewards: {
-    name: string
-    description: string
-  }
+    name: string;
+    description: string;
+  };
 }
 
 interface LoyaltyData {
-  points: number
-  tier: string
-  rewards: LoyaltyReward[]
-  history: RedemptionHistory[]
+  points: number;
+  tier: string;
+  rewards: LoyaltyReward[];
+  history: RedemptionHistory[];
 }
 
 interface RedeemResponse {
-  success: boolean
-  rewardCode: string
-  remainingPoints: number
-  error?: string
+  success: boolean;
+  rewardCode: string;
+  remainingPoints: number;
+  error?: string;
 }
 
-export default function LoyaltyPage() {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-  const { toast } = useToast()
-  const [loyaltyData, setLoyaltyData] = useState<LoyaltyData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [selectedReward, setSelectedReward] = useState<LoyaltyReward | null>(null)
-  const [redeemDialogOpen, setRedeemDialogOpen] = useState(false)
-  const [successDialogOpen, setSuccessDialogOpen] = useState(false)
-  const [rewardCode, setRewardCode] = useState("")
-  const [redeeming, setRedeeming] = useState(false)
+function LoyaltyContent() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loyaltyData, setLoyaltyData] = useState<LoyaltyData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedReward, setSelectedReward] = useState<LoyaltyReward | null>(null);
+  const [redeemDialogOpen, setRedeemDialogOpen] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [rewardCode, setRewardCode] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login?callbackUrl=/loyalty")
+      router.push("/login?callbackUrl=/loyalty");
     }
 
     if (status === "authenticated") {
-      fetchLoyaltyData()
+      fetchLoyaltyData();
     }
-  }, [status, router])
+  }, [status, router]);
 
   const fetchLoyaltyData = async () => {
     try {
-      const response = await fetch("/api/loyalty")
+      const response = await fetch("/api/loyalty");
 
       if (!response.ok) {
-        throw new Error("Failed to fetch loyalty data")
+        throw new Error("Failed to fetch loyalty data");
       }
 
-      const data: LoyaltyData = await response.json()
-      setLoyaltyData(data)
+      const data: LoyaltyData = await response.json();
+      setLoyaltyData(data);
     } catch (error) {
-      console.error("Error fetching loyalty data:", error)
-
-      // Fallback to mock data if API fails
+      console.error("Error fetching loyalty data:", error);
       setLoyaltyData({
         points: 250,
         tier: "Bronze",
@@ -131,26 +132,25 @@ export default function LoyaltyPage() {
             },
           },
         ],
-      })
-
+      });
       toast({
         title: "Using demo data",
         description: "Loyalty API not available, showing sample data",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleRedeemClick = (reward: LoyaltyReward) => {
-    setSelectedReward(reward)
-    setRedeemDialogOpen(true)
-  }
+    setSelectedReward(reward);
+    setRedeemDialogOpen(true);
+  };
 
   const handleRedeemConfirm = async () => {
-    if (!selectedReward || !loyaltyData) return
+    if (!selectedReward || !loyaltyData) return;
 
-    setRedeeming(true)
+    setRedeeming(true);
 
     try {
       const response = await fetch("/api/loyalty", {
@@ -161,15 +161,15 @@ export default function LoyaltyPage() {
         body: JSON.stringify({
           rewardId: selectedReward.id,
         }),
-      })
+      });
 
-      const data: RedeemResponse = await response.json()
+      const data: RedeemResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to redeem reward")
+        throw new Error(data.error || "Failed to redeem reward");
       }
 
-      setRewardCode(data.rewardCode)
+      setRewardCode(data.rewardCode);
       setLoyaltyData((prev) =>
         prev
           ? {
@@ -177,19 +177,15 @@ export default function LoyaltyPage() {
               points: data.remainingPoints,
             }
           : null,
-      )
+      );
 
-      setRedeemDialogOpen(false)
-      setSuccessDialogOpen(true)
-
-      // Refresh loyalty data
-      fetchLoyaltyData()
+      setRedeemDialogOpen(false);
+      setSuccessDialogOpen(true);
+      fetchLoyaltyData();
     } catch (error) {
-      console.error("Error redeeming reward:", error)
-
-      // Mock successful redemption for demo
-      const mockRewardCode = `BREW${Math.random().toString(36).substr(2, 6).toUpperCase()}`
-      setRewardCode(mockRewardCode)
+      console.error("Error redeeming reward:", error);
+      const mockRewardCode = `BREW${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      setRewardCode(mockRewardCode);
 
       if (loyaltyData) {
         setLoyaltyData((prev) =>
@@ -199,27 +195,27 @@ export default function LoyaltyPage() {
                 points: prev.points - selectedReward.points_required,
               }
             : null,
-        )
+        );
       }
 
-      setRedeemDialogOpen(false)
-      setSuccessDialogOpen(true)
+      setRedeemDialogOpen(false);
+      setSuccessDialogOpen(true);
 
       toast({
         title: "Demo redemption successful",
         description: `Reward code: ${mockRewardCode}`,
-      })
+      });
     } finally {
-      setRedeeming(false)
+      setRedeeming(false);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 flex justify-center items-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
   if (!loyaltyData) {
@@ -231,13 +227,12 @@ export default function LoyaltyPage() {
           <Button onClick={fetchLoyaltyData}>Retry</Button>
         </div>
       </div>
-    )
+    );
   }
 
-  // Find the next reward the user can redeem
-  const nextReward = loyaltyData.rewards.find((reward) => reward.points_required > loyaltyData.points)
-  const pointsToNextReward = nextReward ? nextReward.points_required - loyaltyData.points : 0
-  const progressPercentage = nextReward ? (loyaltyData.points / nextReward.points_required) * 100 : 100
+  const nextReward = loyaltyData.rewards.find((reward) => reward.points_required > loyaltyData.points);
+  const pointsToNextReward = nextReward ? nextReward.points_required - loyaltyData.points : 0;
+  const progressPercentage = nextReward ? (loyaltyData.points / nextReward.points_required) * 100 : 100;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -266,7 +261,6 @@ export default function LoyaltyPage() {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Available Rewards</h3>
-
                 {loyaltyData.rewards.length === 0 ? (
                   <p className="text-muted-foreground">No rewards available at the moment.</p>
                 ) : (
@@ -319,7 +313,6 @@ export default function LoyaltyPage() {
                     Earn 10 points for every $1 spent on coffee and food items.
                   </p>
                 </div>
-
                 <div className="flex flex-col items-center text-center">
                   <div className="bg-primary/10 p-3 rounded-full mb-4">
                     <Gift className="h-6 w-6 text-primary" />
@@ -329,7 +322,6 @@ export default function LoyaltyPage() {
                     Use your points to redeem free drinks, food items, and exclusive perks.
                   </p>
                 </div>
-
                 <div className="flex flex-col items-center text-center">
                   <div className="bg-primary/10 p-3 rounded-full mb-4">
                     <ChevronRight className="h-6 w-6 text-primary" />
@@ -385,7 +377,6 @@ export default function LoyaltyPage() {
         </div>
       </div>
 
-      {/* Redeem Confirmation Dialog */}
       <Dialog open={redeemDialogOpen} onOpenChange={setRedeemDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -394,7 +385,6 @@ export default function LoyaltyPage() {
               Are you sure you want to redeem this reward? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-
           {selectedReward && (
             <div className="py-4">
               <h4 className="font-medium mb-2">{selectedReward.name}</h4>
@@ -409,7 +399,6 @@ export default function LoyaltyPage() {
               </div>
             </div>
           )}
-
           <DialogFooter>
             <Button variant="outline" onClick={() => setRedeemDialogOpen(false)}>
               Cancel
@@ -421,30 +410,34 @@ export default function LoyaltyPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Success Dialog */}
       <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Reward Redeemed!</DialogTitle>
             <DialogDescription>Your reward has been successfully redeemed.</DialogDescription>
           </DialogHeader>
-
           <div className="py-4">
             <div className="bg-muted p-4 rounded-md text-center mb-4">
               <p className="text-sm text-muted-foreground mb-2">Your reward code:</p>
               <p className="text-xl font-mono font-bold tracking-wider">{rewardCode}</p>
             </div>
             <p className="text-sm text-muted-foreground">
-              Show this code to our staff when visiting our store to claim your reward. This code has also been sent to
-              your email.
+              Show this code to our staff when visiting our store to claim your reward. This code has also been sent to your email.
             </p>
           </div>
-
           <DialogFooter>
             <Button onClick={() => setSuccessDialogOpen(false)}>Done</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
+}
+
+export default function LoyaltyPage() {
+  return (
+    <Suspense fallback={<div>Loading loyalty program...</div>}>
+      <LoyaltyContent />
+    </Suspense>
+  );
 }

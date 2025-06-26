@@ -1,32 +1,41 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import Link from "next/link"
 import { CheckCircle, Coffee, ArrowRight, Package } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
-export default function OrderSuccessPage() {
+function SuccessContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [orderNumber, setOrderNumber] = useState("")
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    // Get order ID from URL params or localStorage
-    const orderId = searchParams.get("orderId") || localStorage.getItem("lastOrderId")
+    // Set isClient to true only on client-side to avoid server-side rendering issues
+    setIsClient(true)
+  }, [])
 
-    if (orderId) {
-      setOrderNumber(orderId)
-      localStorage.setItem("lastOrderId", orderId)
-    } else {
-      // If no order ID, redirect to menu after a short delay
-      const timer = setTimeout(() => {
-        router.push("/menu")
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [router, searchParams])
+  useEffect(() => {
+    if (!isClient) return // Only run on client-side
+
+    // Dynamically import useSearchParams to ensure it only runs client-side
+    import("next/navigation").then((module) => {
+      const searchParams = module.useSearchParams()
+      const orderId = searchParams.get("orderId") || localStorage.getItem("lastOrderId")
+
+      if (orderId) {
+        setOrderNumber(orderId)
+        localStorage.setItem("lastOrderId", orderId)
+      } else {
+        const timer = setTimeout(() => {
+          router.push("/menu")
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+    })
+  }, [router, isClient])
 
   return (
     <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-[70vh]">
@@ -89,5 +98,13 @@ export default function OrderSuccessPage() {
         </CardFooter>
       </Card>
     </div>
+  )
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading order confirmation...</div>}>
+      <SuccessContent />
+    </Suspense>
   )
 }

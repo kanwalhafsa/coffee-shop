@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Trash2, ShoppingBag, ArrowRight } from "lucide-react"
@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 
 export const dynamic = 'force-dynamic';
 
-export default function CartPage() {
+function CartPageContent() {
   const { items, removeItem, updateQuantity, clearCart } = useCart()
   const [mounted, setMounted] = useState(false)
 
@@ -143,5 +143,13 @@ export default function CartPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CartPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CartPageContent />
+</Suspense>
   )
 }

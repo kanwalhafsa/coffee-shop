@@ -1,12 +1,13 @@
+"use client"
+
+import { Suspense } from "react"
 import FeedbackForm from "../../component/feedback-form"
 import FeedbackList from "../../component/feedback-list"
 
-export const metadata = {
-  title: "Customer Feedback | Brew Haven",
-  description: "Share your experience and read what others have to say about us",
-}
+export const dynamic = 'force-dynamic';
 
-export default function FeedbackPage() {
+
+function FeedbackPageContent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
@@ -30,5 +31,13 @@ export default function FeedbackPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function FeedbackPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FeedbackPageContent />
+    </Suspense>
   )
 }
