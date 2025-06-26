@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Coffee, Facebook, Instagram, Twitter } from "lucide-react"
+import { Coffee, Facebook, Github, Instagram, Linkedin, Twitter } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -15,15 +15,15 @@ export default function Footer() {
               Serving premium coffee in a cozy atmosphere since 2010.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
+              <Link href="https://www.linkedin.com/in/hafsa-kanwal-2945442b7" className="text-muted-foreground hover:text-primary">
+                <Linkedin className="h-5 w-5" />
+                <span className="sr-only">LinkedIn</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
+              <Link href="https://github.com/kanwalhafsa" className="text-muted-foreground hover:text-primary">
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
+              <Link href="https://x.com/kanwal51911" className="text-muted-foreground hover:text-primary">
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
