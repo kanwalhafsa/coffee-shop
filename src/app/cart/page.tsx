@@ -11,18 +11,19 @@ import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/hooks/use-cart"
 import { formatPrice } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { CartItem } from "@/lib/types" 
 
 export const dynamic = 'force-dynamic';
 
 function CartPageContent() {
-  const { items, removeItem, updateQuantity, clearCart } = useCart()
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart() // 'items' ko 'cart' se replace kiya, 'removeItem' ko 'removeFromCart'
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const subtotal = items.reduce((total, item) => {
+  const subtotal = cart.reduce((total: number, item: CartItem) => {
     return total + item.price * item.quantity
   }, 0)
 
@@ -37,7 +38,7 @@ function CartPageContent() {
     )
   }
 
-  if (items.length === 0) {
+  if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-12 min-h-[60vh] flex flex-col items-center justify-center">
         <ShoppingBag className="h-16 w-16 text-muted-foreground mb-4" />
@@ -59,7 +60,7 @@ function CartPageContent() {
           <Card>
             <CardContent className="p-6">
               <div className="space-y-6">
-                {items.map((item) => (
+                {cart.map((item) => (
                   <div key={item.id} className="flex flex-col sm:flex-row gap-4">
                     <div className="relative w-full sm:w-24 h-24 rounded-md overflow-hidden">
                       <Image
@@ -96,7 +97,7 @@ function CartPageContent() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeFromCart(item.id)} // 'removeItem' ko 'removeFromCart' se replace kiya
                           className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
                         >
                           <Trash2 className="h-4 w-4 mr-1" />
@@ -150,6 +151,6 @@ export default function CartPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <CartPageContent />
-</Suspense>
+    </Suspense>
   )
 }

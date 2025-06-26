@@ -6,7 +6,6 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Coffee, Eye, EyeOff } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,7 +22,6 @@ function SignupPageContent() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-
   const { signup } = useAuth()
   const router = useRouter()
 
@@ -33,18 +31,21 @@ function SignupPageContent() {
     setIsLoading(true)
 
     if (!name || !email || !password || !confirmPassword) {
+      console.log("SignupPage: Missing required fields")
       setError("Please fill in all fields")
       setIsLoading(false)
       return
     }
 
     if (password !== confirmPassword) {
+      console.log("SignupPage: Passwords do not match")
       setError("Passwords do not match")
       setIsLoading(false)
       return
     }
 
     if (password.length < 6) {
+      console.log("SignupPage: Password too short")
       setError("Password must be at least 6 characters long")
       setIsLoading(false)
       return
@@ -53,8 +54,10 @@ function SignupPageContent() {
     const success = await signup(name, email, password)
 
     if (success) {
+      console.log("SignupPage: Redirecting to home")
       router.push("/")
     } else {
+      console.log("SignupPage: Signup failed - email already exists")
       setError("User with this email already exists")
     }
 

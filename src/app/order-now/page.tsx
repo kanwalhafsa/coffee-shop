@@ -12,6 +12,10 @@ import { useCart } from "@/hooks/use-cart"
 import { formatPrice } from "@/lib/utils"
 import { toast } from "sonner"
 
+// Import or define CartItem type
+
+import type { CartItem } from "@/lib/types"
+
 // Featured/Popular items data
 const featuredItems = [
   {
@@ -129,18 +133,18 @@ const specialtyCoffees = [
 ]
 
 export default function OrderNowPage() {
-  const { items, addItem } = useCart()
+  const { cart: items, addToCart } = useCart()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0)
-  const cartTotal = items.reduce((total, item) => total + item.price * item.quantity, 0)
+  const cartItemCount = items.reduce((total:number, item:CartItem) => total + item.quantity, 0)
+  const cartTotal = items.reduce((total:number, item:CartItem) => total + item.price * item.quantity, 0)
 
   const handleAddToCart = (item: any) => {
-    addItem({
+    addToCart({
       id: item.id,
       name: item.name,
       description: item.description,

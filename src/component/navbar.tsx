@@ -1,11 +1,9 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Coffee, Menu, ShoppingCart, User, LogOut } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
@@ -21,20 +19,17 @@ import { useAuth } from "../../contexts/auth-context"
 
 export default function Navbar() {
   const pathname = usePathname()
-  const { items } = useCart()
+  const { cart } = useCart() // Changed from items to cart
+  const { user, logout } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  // Safely get auth context
-  const authContext = useAuth()
-  const user = authContext?.user
-  const logout = authContext?.logout
-
   useEffect(() => {
+    console.log("Navbar: Mounted, cart =", cart, "user =", user)
     setMounted(true)
-  }, [])
+  }, [cart, user])
 
-  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0)
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0)
 
   const routes = [
     { href: "/", label: "Home" },
@@ -88,11 +83,9 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* Auth section - only show if not on auth pages */}
           {!isAuthPage && (
             <>
               {user ? (
-                // Logged in user
                 <div className="hidden sm:flex items-center gap-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -117,7 +110,6 @@ export default function Navbar() {
                   </DropdownMenu>
                 </div>
               ) : (
-                // Not logged in
                 <div className="hidden sm:flex items-center gap-2">
                   <Link href="/login">
                     <Button variant="outline">Login</Button>
@@ -161,7 +153,6 @@ export default function Navbar() {
                     </Link>
                   ))}
 
-                  {/* Mobile auth section */}
                   {user ? (
                     <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
                       <div className="text-sm text-muted-foreground">Welcome, {user.name}</div>

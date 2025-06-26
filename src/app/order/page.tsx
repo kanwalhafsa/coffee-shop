@@ -4,7 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Clock } from "lucide-react"
-import { Suspense } from "react";
+import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -15,17 +15,18 @@ import { useCart } from "@/hooks/use-cart"
 import { useAuth } from "../../../contexts/auth-context"
 import { formatPrice } from "@/lib/utils"
 import { toast } from "sonner"
+import { CartItem } from "@/lib/types"
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
- function OrderContent() {
+function OrderContent() {
   const router = useRouter()
   const { user } = useAuth()
-  const { items, clearCart } = useCart()
+  const { cart, clearCart } = useCart() // Changed from items to cart
   const [orderType, setOrderType] = useState("pickup")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const subtotal = items.reduce((total, item) => {
+  const subtotal = cart.reduce((total: number, item: CartItem) => {
     return total + item.price * item.quantity
   }, 0)
 
@@ -37,12 +38,13 @@ export const dynamic = 'force-dynamic';
     e.preventDefault()
 
     if (!user) {
+      console.log("OrderContent: User not logged in, redirecting to /login")
       toast.error("Please login to place an order.")
       router.push("/login")
       return
     }
 
-    if (items.length === 0) {
+    if (cart.length === 0) {
       toast.error("Please add some items to your cart before placing an order.")
       return
     }
@@ -58,7 +60,7 @@ export const dynamic = 'force-dynamic';
       const orderData = {
         id: orderId,
         userId: user.id,
-        items: items.map((item) => ({
+        items: cart.map((item: CartItem) => ({
           id: item.id,
           name: item.name,
           description: item.description || "",
@@ -204,7 +206,7 @@ export const dynamic = 'force-dynamic';
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button type="submit" size="lg" disabled={isSubmitting}>
+                <Button type="submit" size="lg" disabled={isSubmitting || cart.length === 0}>
                   {isSubmitting ? (
                     <>
                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
@@ -226,9 +228,9 @@ export const dynamic = 'force-dynamic';
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {items.length > 0 ? (
+                {cart.length > 0 ? (
                   <>
-                    {items.map((item) => (
+                    {cart.map((item: CartItem) => (
                       <div key={item.id} className="flex justify-between">
                         <span>
                           {item.quantity} x {item.name}
@@ -279,5 +281,5 @@ export default function OrderPage() {
     <Suspense fallback={<div>Loading order...</div>}>
       <OrderContent />
     </Suspense>
-  );
+  )
 }

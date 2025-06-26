@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -19,6 +17,7 @@ import { useCart } from "@/hooks/use-cart"
 import { useAuth } from "../../../contexts/auth-context"
 import { formatPrice } from "@/lib/utils"
 import { toast } from "sonner"
+import { CartItem } from "@/lib/types" // Import CartItem type
 
 interface CustomerInfo {
   name: string
@@ -59,7 +58,7 @@ const paymentMethods: PaymentMethod[] = [
 ]
 
 export default function CheckoutPage() {
-  const { items, clearCart } = useCart()
+  const { cart, clearCart } = useCart() // 'items' ko 'cart' se replace kiya
   const { user } = useAuth()
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
@@ -79,7 +78,6 @@ export default function CheckoutPage() {
     notes: "",
   })
 
-  // Card payment form state
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -87,7 +85,6 @@ export default function CheckoutPage() {
     cardName: "",
   })
 
-  // Online banking form state
   const [bankInfo, setBankInfo] = useState({
     bankName: "",
     accountNumber: "",
@@ -105,7 +102,7 @@ export default function CheckoutPage() {
     }
   }, [user])
 
-  const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0)
+  const subtotal = cart.reduce((total: number, item: CartItem) => total + item.price * item.quantity, 0)
   const tax = subtotal * 0.1
   const deliveryFee = subtotal > 50 ? 0 : 5
   const total = subtotal + tax + deliveryFee
@@ -140,7 +137,6 @@ export default function CheckoutPage() {
       return false
     }
 
-    // Validate payment method specific fields
     if (selectedPayment === "card") {
       if (!cardInfo.cardNumber || !cardInfo.expiryDate || !cardInfo.cvv || !cardInfo.cardName) {
         toast.error("Please fill in all card details")
@@ -160,15 +156,12 @@ export default function CheckoutPage() {
 
   const processPayment = async (): Promise<boolean> => {
     if (selectedPayment === "cod") {
-      return true // No payment processing needed for COD
+      return true
     }
 
     if (selectedPayment === "card") {
-      // Simulate card payment processing
       toast.info("Processing card payment...")
       await new Promise((resolve) => setTimeout(resolve, 3000))
-
-      // Simulate payment success/failure (90% success rate)
       const paymentSuccess = Math.random() > 0.1
 
       if (!paymentSuccess) {
@@ -181,14 +174,10 @@ export default function CheckoutPage() {
     }
 
     if (selectedPayment === "online") {
-      // Simulate online banking
       toast.info("Redirecting to your bank...")
       await new Promise((resolve) => setTimeout(resolve, 2000))
-
       toast.info("Please complete the payment in your banking app...")
       await new Promise((resolve) => setTimeout(resolve, 3000))
-
-      // Simulate banking success
       const bankingSuccess = Math.random() > 0.05
 
       if (!bankingSuccess) {
@@ -209,7 +198,6 @@ export default function CheckoutPage() {
     setIsLoading(true)
 
     try {
-      // Process payment first
       const paymentSuccess = await processPayment()
 
       if (!paymentSuccess) {
@@ -217,14 +205,12 @@ export default function CheckoutPage() {
         return
       }
 
-      // Generate order ID
       const newOrderId = `BH${Date.now().toString().slice(-6)}`
 
-      // Save order to localStorage
       const order = {
         id: newOrderId,
         userId: user?.id,
-        items: items,
+        items: cart, // 'items' ko 'cart' se replace kiya
         customerInfo,
         paymentMethod: selectedPayment,
         paymentDetails: selectedPayment === "card" ? { last4: cardInfo.cardNumber.slice(-4) } : null,
@@ -260,7 +246,7 @@ export default function CheckoutPage() {
     )
   }
 
-  if (items.length === 0 && !orderPlaced) {
+  if (cart.length === 0 && !orderPlaced) {
     return (
       <div className="container mx-auto px-4 py-12 min-h-[60vh] flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-2">Your cart is empty</h1>
@@ -432,7 +418,6 @@ export default function CheckoutPage() {
                 ))}
               </RadioGroup>
 
-              {/* Card Payment Form */}
               {showPaymentForm && selectedPayment === "card" && (
                 <div className="mt-4 p-4 border rounded-lg bg-muted/20">
                   <h4 className="font-medium mb-3">Card Details</h4>
@@ -482,7 +467,6 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Online Banking Form */}
               {showPaymentForm && selectedPayment === "online" && (
                 <div className="mt-4 p-4 border rounded-lg bg-muted/20">
                   <h4 className="font-medium mb-3">Banking Details</h4>
@@ -512,7 +496,6 @@ export default function CheckoutPage() {
           </Card>
         </div>
 
-        {/* Order Summary */}
         <div>
           <Card className="sticky top-4">
             <CardHeader>
@@ -523,7 +506,7 @@ export default function CheckoutPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
-                {items.map((item) => (
+                {cart.map((item) => (
                   <div key={item.id} className="flex gap-3">
                     <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
                       <Image

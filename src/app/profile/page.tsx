@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 export const dynamic = 'force-dynamic';
-// import OrderHistory from "@/components/order-history";
 
 function ProfileContent() {
   const { data: session, status } = useSession();

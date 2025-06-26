@@ -1,18 +1,15 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Coffee, Eye, EyeOff } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "../../../contexts/auth-context"
-
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -20,7 +17,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-
   const { login } = useAuth()
   const router = useRouter()
 
@@ -30,6 +26,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     if (!email || !password) {
+      console.log("LoginPage: Missing email or password")
       setError("Please fill in all fields")
       setIsLoading(false)
       return
@@ -38,8 +35,10 @@ export default function LoginPage() {
     const success = await login(email, password)
 
     if (success) {
+      console.log("LoginPage: Redirecting to home")
       router.push("/")
     } else {
+      console.log("LoginPage: Login failed - invalid credentials")
       setError("Invalid email or password")
     }
 

@@ -2,6 +2,8 @@
 
 import type React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "../../contexts/auth-context"
 import { Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,15 +13,32 @@ import { toast } from "sonner"
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+
+  console.log("ContactForm: user =", user, "isLoading =", isLoading)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (isLoading) {
+      console.log("ContactForm: Auth is loading, waiting...")
+      toast.info("Please wait, checking authentication...")
+      return
+    }
+
+    if (!user) {
+      console.log("ContactForm: User not logged in, redirecting to /login")
+      toast.error("Please log in or sign up to send a message")
+      router.push("/login")
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
       const formData = new FormData(e.currentTarget)
 
-      // Create a regular object instead of FormData for better CORS handling
       const formObject = {
         access_key: "121a70a4-2991-46a5-b2b4-1d9a361d199e",
         name: formData.get("name") as string,
@@ -29,9 +48,10 @@ export default function ContactForm() {
         message: formData.get("message") as string,
         from_name: "Brew Haven Contact Form",
         to_email: "kanwalhafsa47@gmail.com",
+        user_id: user.id,
       }
 
-      console.log("Submitting form with data:", formObject)
+      console.log("ContactForm: Submitting form:", formObject)
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -43,47 +63,17 @@ export default function ContactForm() {
       })
 
       const data = await response.json()
-      console.log("Web3Forms response:", data)
+      console.log("ContactForm: Web3Forms response:", data)
 
       if (data.success) {
         toast.success("Message sent successfully! We'll get back to you soon.")
-        // Reset form
-        const form = e.target as HTMLFormElement
-        form.reset()
+        e.currentTarget.reset()
       } else {
-        console.error("Web3Forms error:", data)
         throw new Error(data.message || "Failed to send message")
       }
     } catch (error) {
-      console.error("Error sending message:", error)
-
-      // Fallback: Save to localStorage and show success message
-      try {
-        const formData = new FormData(e.currentTarget)
-        const contactMessage = {
-          id: Date.now().toString(),
-          name: formData.get("name") as string,
-          email: formData.get("email") as string,
-          phone: (formData.get("phone") as string) || "",
-          subject: formData.get("subject") as string,
-          message: formData.get("message") as string,
-          timestamp: new Date().toISOString(),
-          status: "pending",
-        }
-
-        // Save to localStorage as backup
-        const existingMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]")
-        existingMessages.push(contactMessage)
-        localStorage.setItem("contactMessages", JSON.stringify(existingMessages))
-
-        toast.success("Message received! We'll get back to you soon. (Saved locally)")
-
-        // Reset form
-        const form = e.target as HTMLFormElement
-        form.reset()
-      } catch (fallbackError) {
-        toast.error("Failed to send message. Please try again or contact us directly at kanwalhafsa47@gmail.com")
-      }
+      console.error("ContactForm: Error sending message:", error)
+      toast.error("Failed to send message. Please try again or contact us at kanwalhafsa47@gmail.com")
     } finally {
       setIsSubmitting(false)
     }
@@ -123,7 +113,7 @@ export default function ContactForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -138,9 +128,10 @@ export default function ContactForm() {
       </Button>
 
       <p className="text-xs text-muted-foreground text-center">
-        We'll respond to your message within 24 hours.
+        Please <a href="/login" className="text-primary hover:underline">log in</a> or{" "}
+        <a href="/signup" className="text-primary hover:underline">sign up</a> to send a message.
         <br />
-        Direct email:{" "}
+        We'll respond within 24 hours. Direct email:{" "}
         <a href="mailto:kanwalhafsa47@gmail.com" className="text-primary hover:underline">
           kanwalhafsa47@gmail.com
         </a>

@@ -1,7 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
 
 export async function POST(request: NextRequest) {
   try {
+    // Check for authenticated user
+    const session = await getServerSession()
+    if (!session?.user) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+    }
+
     const body = await request.json()
     const { name, email, phone, subject, message } = body
 
@@ -21,6 +28,7 @@ export async function POST(request: NextRequest) {
         message,
         from_name: "Brew Haven Contact Form",
         to_email: "kanwalhafsa47@gmail.com",
+        user_id: session.user.id, // Add user ID for tracking
       }
 
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -52,6 +60,7 @@ export async function POST(request: NextRequest) {
         phone,
         subject,
         message,
+        user_id: session.user.id,
         timestamp: new Date().toISOString(),
       })
 

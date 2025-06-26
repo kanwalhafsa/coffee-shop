@@ -62,7 +62,7 @@ const featuredCoffees: Coffee[] = [
 
 export default function FeaturedCoffees() {
   const { toast } = useToast()
-  const { addItem } = useCart()
+  const { addToCart } = useCart()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function FeaturedCoffees() {
   }, [])
 
   const handleAddToCart = (coffee: Coffee) => {
-    addItem({
+    addToCart({
       ...coffee,
       quantity: 1,
     })

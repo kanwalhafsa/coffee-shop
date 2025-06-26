@@ -25,51 +25,65 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
-    // Check if user is logged in on app start
-    try {
-      const savedUser = localStorage.getItem("user")
-      if (savedUser) {
-        const parsedUser = JSON.parse(savedUser)
-        setUser(parsedUser)
+    const loadUser = async () => {
+      try {
+        console.log("AuthProvider: Initializing user check")
+        const savedUser = localStorage.getItem("user")
+        if (savedUser) {
+          const parsedUser: User = JSON.parse(savedUser)
+          if (parsedUser.id && parsedUser.name && parsedUser.email) {
+            console.log("AuthProvider: User loaded from localStorage:", parsedUser)
+            setUser(parsedUser)
+          } else {
+            console.log("AuthProvider: Invalid user data in localStorage, clearing")
+            localStorage.removeItem("user")
+          }
+        } else {
+          console.log("AuthProvider: No user found in localStorage")
+        }
+      } catch (error) {
+        console.error("AuthProvider: Error loading user from localStorage:", error)
+        localStorage.removeItem("user")
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Failed to parse user from localStorage:", error)
-      localStorage.removeItem("user")
-    } finally {
-      setIsLoading(false)
     }
+
+    loadUser()
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Get users from localStorage
+      console.log("AuthProvider: Login attempt with email:", email)
       const users = JSON.parse(localStorage.getItem("users") || "[]")
       const foundUser = users.find((u: any) => u.email === email && u.password === password)
 
       if (foundUser) {
-        const userWithoutPassword = { id: foundUser.id, name: foundUser.name, email: foundUser.email }
+        const userWithoutPassword: User = { id: foundUser.id, name: foundUser.name, email: foundUser.email }
         setUser(userWithoutPassword)
         localStorage.setItem("user", JSON.stringify(userWithoutPassword))
+        console.log("AuthProvider: Login successful:", userWithoutPassword)
+        router.push("/")
         return true
       }
+      console.log("AuthProvider: Login failed: Invalid credentials")
       return false
     } catch (error) {
-      console.error("Login error:", error)
+      console.error("AuthProvider: Login error:", error)
       return false
     }
   }
 
   const signup = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
-      // Get existing users
+      console.log("AuthProvider: Signup attempt with email:", email)
       const users = JSON.parse(localStorage.getItem("users") || "[]")
 
-      // Check if user already exists
       if (users.find((u: any) => u.email === email)) {
-        return false // User already exists
+        console.log("AuthProvider: Signup failed: Email already exists")
+        return false
       }
 
-      // Create new user
       const newUser = {
         id: Date.now().toString(),
         name,
@@ -80,25 +94,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       users.push(newUser)
       localStorage.setItem("users", JSON.stringify(users))
 
-      // Auto login after signup
-      const userWithoutPassword = { id: newUser.id, name: newUser.name, email: newUser.email }
+      const userWithoutPassword: User = { id: newUser.id, name: newUser.name, email: newUser.email } // Fixed typo: 'id Skinner' to 'id: newUser.id'
       setUser(userWithoutPassword)
       localStorage.setItem("user", JSON.stringify(userWithoutPassword))
-
+      console.log("AuthProvider: Signup successful:", userWithoutPassword)
+      router.push("/")
       return true
     } catch (error) {
-      console.error("Signup error:", error)
+      console.error("AuthProvider: Signup error:", error)
       return false
     }
   }
 
   const logout = () => {
+    console.log("AuthProvider: Logging out")
     setUser(null)
     localStorage.removeItem("user")
     router.push("/login")
   }
 
-  return <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

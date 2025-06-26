@@ -151,7 +151,7 @@ const coffees: Coffee[] = [
 
 export default function CoffeeList({ category = "all" }: { category?: string }) {
   const { toast } = useToast()
-  const { addItem } = useCart()
+  const { addToCart } = useCart()
   const [searchQuery, setSearchQuery] = useState("")
   const [mounted, setMounted] = useState(false)
 
@@ -160,7 +160,7 @@ export default function CoffeeList({ category = "all" }: { category?: string }) 
   }, [])
 
   const handleAddToCart = (coffee: Coffee) => {
-    addItem({
+    addToCart({
       ...coffee,
       quantity: 1,
     })

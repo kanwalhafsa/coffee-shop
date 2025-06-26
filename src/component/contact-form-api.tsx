@@ -2,6 +2,8 @@
 
 import type React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "../../contexts/auth-context"
 import { Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,46 +13,95 @@ import { toast } from "sonner"
 
 export default function ContactFormAPI() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    // Check if authentication is still loading
+    if (isLoading) {
+      toast.info("Please wait, checking authentication...")
+      return
+    }
+
+    // Check if user is logged in
+    if (!user) {
+      toast.info("Please log in to send a message.")
+      router.push("/login")
+      return
+    }
+
     setIsSubmitting(true)
 
-    try {
-      const formData = new FormData(e.currentTarget)
+    // Declare contactData outside try block to make it accessible in catch block
+    const formData = new FormData(e.currentTarget)
+    const contactData = {
+      access_key: "121a70a4-2991-46a5-b2b4-1d9a361d199e", // Replace with your valid Web3Forms access key
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: (formData.get("phone") as string) || "",
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+      from_name: "Brew Haven Contact Form",
+      to_email: "kanwalhafsa47@gmail.com",
+      user_id: user.id,
+    }
 
-      const contactData = {
-        name: formData.get("name") as string,
-        email: formData.get("email") as string,
-        phone: (formData.get("phone") as string) || "",
-        subject: formData.get("subject") as string,
-        message: formData.get("message") as string,
+    try {
+      // Validate form data
+      if (!contactData.name.trim() || !contactData.email.trim() || !contactData.subject.trim() || !contactData.message.trim()) {
+        toast.error("Please fill in all required fields.")
+        setIsSubmitting(false)
+        return
       }
 
-      console.log("Submitting via API:", contactData)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(contactData.email)) {
+        toast.error("Please enter a valid email address.")
+        setIsSubmitting(false)
+        return
+      }
 
-      const response = await fetch("/api/contact", {
+      console.log("ContactFormAPI: Submitting form data:", contactData)
+
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(contactData),
       })
 
       const data = await response.json()
-      console.log("API response:", data)
+      console.log("ContactFormAPI: Web3Forms API response:", {
+        status: response.status,
+        body: data,
+      })
 
-      if (data.success) {
-        toast.success(data.message)
-        // Reset form
+      if (response.ok && data.success) {
+        toast.success("Message sent successfully! Check your email for confirmation.")
         const form = e.target as HTMLFormElement
         form.reset()
       } else {
-        throw new Error(data.error || "Failed to send message")
+        throw new Error(data.message || `API request failed with status ${response.status}`)
       }
     } catch (error) {
-      console.error("Error sending message:", error)
-      toast.error("Failed to send message. Please try again or contact us directly.")
+      console.error("ContactFormAPI: Error sending message:", error)
+      toast.error(
+        "Failed to send message. Please check your Web3Forms configuration or contact us directly at kanwalhafsa47@gmail.com"
+      )
+
+      // Fallback: Save to localStorage for debugging
+      const messages = JSON.parse(localStorage.getItem("contact_messages") || "[]")
+      messages.push({
+        ...contactData,
+        userId: user.id,
+        timestamp: new Date().toISOString(),
+      })
+      localStorage.setItem("contact_messages", JSON.stringify(messages))
+      console.log("ContactFormAPI: Saved to localStorage for debugging:", messages)
     } finally {
       setIsSubmitting(false)
     }
@@ -105,9 +156,10 @@ export default function ContactFormAPI() {
       </Button>
 
       <p className="text-xs text-muted-foreground text-center">
-        We'll respond to your message within 24 hours.
+        Please <a href="/login" className="text-primary hover:underline">log in</a> or{" "}
+        <a href="/signup" className="text-primary hover:underline">sign up</a> to send a message.
         <br />
-        Direct email:{" "}
+        We'll respond to your message within 24 hours. Direct email:{" "}
         <a href="mailto:kanwalhafsa47@gmail.com" className="text-primary hover:underline">
           kanwalhafsa47@gmail.com
         </a>
